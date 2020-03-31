@@ -1,0 +1,11 @@
+# Dependency directory
+node_modules
+
+# Config
+jest.config.js
+
+# Build output
+dist
+
+# Tests
+test/**/*.ts
