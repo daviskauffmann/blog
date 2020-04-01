@@ -32,7 +32,7 @@ router.post('/register', (req, res, next) => {
         if (err) return next(err);
         const user = new User({
             username: req.body.username,
-            passwordHash: encrypted,
+            password: encrypted,
         });
         user.save((err, user) => {
             if (err) return next(err);

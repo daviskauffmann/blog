@@ -2,7 +2,7 @@ import { Document, model, Schema } from 'mongoose';
 
 interface User extends Document {
     username: string;
-    passwordHash: string;
+    password: string;
 }
 
 const schema = new Schema({
@@ -10,7 +10,7 @@ const schema = new Schema({
         type: String,
         unique: true,
     },
-    passwordHash: {
+    password: {
         type: String,
     },
 });
@@ -18,3 +18,4 @@ const schema = new Schema({
 const User = model<User>('User', schema);
 
 export default User;
+

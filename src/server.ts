@@ -1,6 +1,5 @@
 import connectMongodbSession from 'connect-mongodb-session';
 import cors from 'cors';
-import debug from 'debug';
 import express from 'express';
 import session from 'express-session';
 import helmet from 'helmet';
@@ -9,9 +8,6 @@ import morgan from 'morgan';
 import passport from 'passport';
 import './passport';
 import router from './router';
-
-const log = debug('blog:server');
-const error = debug('blog:error');
 
 const MongoDBStore = connectMongodbSession(session);
 const store = new MongoDBStore({
@@ -49,7 +45,7 @@ app.use(router);
 
 if (process.env.NODE_ENV === 'production') {
     app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
-        error(err);
+        console.error(err);
         res.status(500).send({
             name: err.name,
             message: err.message,
@@ -57,7 +53,7 @@ if (process.env.NODE_ENV === 'production') {
     });
 } else {
     app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
-        error(err);
+        console.error(err);
         res.status(500).send({
             name: err.name,
             message: err.message,
@@ -72,8 +68,8 @@ mongoose.connect(process.env.MONGODB_URI!, {
     useCreateIndex: true,
 }, err => {
     if (err) throw err;
-    const port = process.env.PORT || 3000;
-    app.listen(port, () => {
-        log(`listening on port ${port}`);
+    console.log(`Connected to ${process.env.MONGODB_URI}`);
+    app.listen(process.env.PORT, () => {
+        console.log(`Server listening on port ${process.env.PORT}`);
     });
 });
