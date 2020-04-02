@@ -16,11 +16,10 @@
     <h1>Welcome!</h1>
     <% } %>
 
-    <h2>Users:</h2>
     <ul>
-        <% for(let i = 0; i < users.length; i++) { %>
+        <% for(let i = 0; i < posts.length; i++) { %>
         <li>
-            <a href="/<%= users[i].username %>/posts"><%= users[i].username %></a>
+            <a href="/posts/<%= posts[i].slug %>"><%= posts[i].title %></a>
         </li>
         <% } %>
     </ul>

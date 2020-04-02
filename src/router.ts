@@ -15,12 +15,23 @@ const authenticate: express.RequestHandler = (req, res, next) => {
     }
 };
 
+function authorize(roles: string[]): express.RequestHandler {
+    return (req, res, next) => {
+        for (const role of roles) {
+            if (!(req.user as User).roles.includes(role)) {
+                return res.sendStatus(403);
+            }
+        }
+        next();
+    };
+}
+
 router.get('/', (req, res, next) => {
-    User.find((err, users) => {
+    Post.find((err, posts) => {
         if (err) return next(err);
         res.render('index', {
             user: req.user,
-            users,
+            posts,
         });
     });
 });
@@ -63,40 +74,21 @@ router.post('/login', (req, res, next) => {
 
 router.post('/logout', (req, res) => {
     req.logout();
-    res.redirect(req.query.returnurl || '/');
+    res.redirect('/');
 });
 
-router.get('/:username/posts', (req, res, next) => {
-    User.findOne({ username: req.params.username }, (err, user) => {
+router.get('/posts/:slug', (req, res, next) => {
+    Post.findOne({ slug: req.params.slug }, (err, post) => {
         if (err) return next(err);
-        if (!user) return res.sendStatus(404);
-        Post.find({ userId: user.id }, (err, posts) => {
-            res.render('posts', {
-                user: req.user,
-                username: user.username,
-                posts,
-            });
+        if (!post) return res.sendStatus(404);
+        res.render('post', {
+            user: req.user,
+            post,
         });
     });
 });
 
-router.get('/:username/posts/:slug', (req, res, next) => {
-    User.findOne({ username: req.params.username }, (err, user) => {
-        if (err) return next(err);
-        if (!user) return res.sendStatus(404);
-        Post.findOne({ userId: user.id, slug: req.params.slug }, (err, post) => {
-            if (err) return next(err);
-            if (!post) return res.sendStatus(404);
-            res.render('post', {
-                user: req.user,
-                username: user.username,
-                post,
-            });
-        });
-    });
-});
-
-router.get('/:username/images/:filename', (req, res, next) => {
+router.get('/images/:filename', (req, res, next) => {
     Image.findOne({ filename: req.params.filename }, (err, image) => {
         if (err) return next(err);
         if (!image) return res.sendStatus(404);
@@ -107,39 +99,33 @@ router.get('/:username/images/:filename', (req, res, next) => {
     });
 });
 
-router.delete('/admin/posts/:id', authenticate, (req, res, next) => {
-    Post.findOne({ _id: req.params.id }, (err, post) => {
+router.delete('/admin/posts/:id', authenticate, authorize(['admin']), (req, res, next) => {
+    Post.deleteOne({ _id: req.params.id }, err => {
         if (err) return next(err);
-        if (!post) return res.sendStatus(404);
-        if (!post.userId.equals((req.user as User).id)) return res.sendStatus(403);
-        Post.deleteOne({ _id: req.params.id }, err => {
-            if (err) return next(err);
-            res.redirect(`/${(req.user as User).username}/posts`);
-        });
+        res.redirect('/');
     });
 });
 
-router.get('/admin/add-post', authenticate, (req, res, next) => {
+router.get('/admin/add-post', authenticate, authorize(['admin']), (req, res, next) => {
     res.render('add-post', {
         user: req.user,
     });
 });
 
-router.post('/admin/posts', authenticate, (req, res, next) => {
+router.post('/admin/posts', authenticate, authorize(['admin']), (req, res, next) => {
     const post = new Post({
-        userId: (req.user as User).id,
         title: req.body.title,
         slug: req.body.slug,
         content: req.body.content,
     });
     post.save((err, post) => {
         if (err) return next(err);
-        res.redirect(`/${(req.user as User).username}/posts/${post.slug}`);
+        res.redirect(`/posts/${post.slug}`);
     });
 });
 
-router.get('/admin/images', authenticate, (req, res, next) => {
-    Image.find({ userId: (req.user as User).id }, (err, images) => {
+router.get('/admin/images', authenticate, authorize(['admin']), (req, res, next) => {
+    Image.find((err, images) => {
         if (err) return next(err);
         res.render('images', {
             user: req.user,
@@ -148,15 +134,10 @@ router.get('/admin/images', authenticate, (req, res, next) => {
     });
 });
 
-router.delete('/admin/images/:id', authenticate, (req, res, next) => {
-    Image.findOne({ _id: req.params.id }, (err, image) => {
+router.delete('/admin/images/:id', authenticate, authorize(['admin']), (req, res, next) => {
+    Image.deleteOne({ _id: req.params.id }, err => {
         if (err) return next(err);
-        if (!image) return res.sendStatus(404);
-        if (!image.userId.equals((req.user as User).id)) return res.sendStatus(403);
-        Image.deleteOne({ _id: req.params.id }, err => {
-            if (err) return next(err);
-            res.redirect(`/admin/images`);
-        });
+        res.redirect('/admin/images');
     });
 });
 
@@ -168,13 +149,12 @@ router.get('/admin/add-image', authenticate, (req, res, next) => {
 
 router.post('/admin/images', authenticate, (req, res, next) => {
     const image = new Image({
-        userId: (req.user as User).id,
         filename: req.body.filename,
         data: req.body.data,
     });
     image.save((err, image) => {
         if (err) return next(err);
-        res.redirect(`/admin/images`);
+        res.redirect('/admin/images');
     });
 });
 

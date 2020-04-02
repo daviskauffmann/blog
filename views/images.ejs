@@ -11,7 +11,7 @@
     <%- include('header') %>
 
     <% for(let i = 0; i < images.length; i++) { %>
-    <img src="/<%= user.username %>/images/<%= images[i].filename %>">
+    <img src="/images/<%= images[i].filename %>">
     <button id="delete-<%= images[i]._id %>">Delete</button>
     <% } %>
 

@@ -12,25 +12,28 @@
 
     <div id="post"></div>
 
-    <% if (user && user.username == username) { %>
+    <% if (user) { %>
+    <button id="comment">Comment</button>
+    <% if (user.roles.includes('admin')) { %>
     <button id="edit">Edit</button>
     <button id="delete">Delete</button>
+    <% } %>
     <% } %>
 
     <%- include('footer') %>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.8.2/marked.js"></script>
     <script>
-        class Renderer extends marked.Renderer {
-            image(href, title, text) {
-                return super.image(`/<%= username %>/images/${href}`, title, text);
-            }
-        }
+        document.getElementById('post').innerHTML = marked(`<%= post.content %>`);
 
-        const renderer = new Renderer();
-        document.getElementById('post').innerHTML = marked(`<%= post.content %>`, { renderer });
-
-        // <% if (user && user.username == username) { %>
+        // <% if (user) { %>
+        document.getElementById('comment').onclick = e => {
+            console.log('TODO: comment');
+        };
+        // <% if (user.roles.includes('admin')) { %>
+        document.getElementById('edit').onclick = e => {
+            console.log('TODO: edit');
+        };
         document.getElementById('delete').onclick = e => {
             fetch('/admin/posts/<%= post._id %>', {
                 method: 'DELETE',
@@ -40,6 +43,7 @@
                 }
             });
         };
+        // <% } %>
         // <% } %>
     </script>
 </body>

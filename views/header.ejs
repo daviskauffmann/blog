@@ -1,10 +1,11 @@
 <nav>
     <a href="/">Home</a> |
     <% if (user) { %>
-    <a href="/<%= user.username %>/posts">Posts</a> |
+    <% if (user.roles.includes('admin')) { %>
     <a href="/admin/add-post">Add Post</a> |
     <a href="/admin/images">Images</a> |
     <a href="/admin/add-image">Add Image</a> |
+    <% } %>
     <a href="javascript:logout();">Logout</a>
     <% } else { %>
     <a id="register-link">Register</a> |
@@ -13,13 +14,9 @@
 </nav>
 
 <script>
-    // <% if (!user) { %>
-    document.getElementById('register-link').href = `/register?returnurl=${window.location.href}`;
-    document.getElementById('login-link').href = `/login?returnurl=${window.location.href}`;
-    // <% } %>
-
+    // <% if (user) { %>
     function logout() {
-        fetch(`/logout?returnurl=${window.location.href}`, {
+        fetch(`/logout`, {
             method: 'POST',
         }).then(response => {
             if (response.redirected) {
@@ -27,4 +24,8 @@
             }
         });
     }
+    //<% } else { %>
+    document.getElementById('register-link').href = `/register?returnurl=${window.location.href}`;
+    document.getElementById('login-link').href = `/login?returnurl=${window.location.href}`;
+    // <% } %>
 </script>
