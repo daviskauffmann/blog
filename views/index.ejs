@@ -8,32 +8,15 @@
 </head>
 
 <body>
-    <% if (user) { %>
-    <h1>Welcome back, <%= user.username %>!</h1>
-    <% } else { %>
-    <h1>Welcome!</h1>
-    <% } %>
-    <nav>
-        <% if (user) { %>
-        <a href="javascript:logout();">Logout</a>
-        <% } else { %>
-        <a href="/login">Login</a> |
-        <a href="/register">Register</a>
-        <% } %>
-    </nav>
+    <%- include('header') %>
 
-    <script>
-        function logout() {
-            fetch('/logout', {
-                method: 'POST',
-                redirect: 'follow',
-            }).then(response => {
-                if (response.redirected) {
-                    window.location.href = response.url;
-                }
-            });
-        }
-    </script>
+    <ul>
+        <% for(let i = 0; i < posts.length; i++) { %>
+        <li>
+            <a href="/posts/<%= posts[i].slug %> "><%= posts[i].title %></a>
+        </li>
+        <% } %>
+    </ul>
 </body>
 
 </html>

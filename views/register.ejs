@@ -8,13 +8,38 @@
 </head>
 
 <body>
-    <form action="/register" method="POST">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" value="username"><br><br>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" value="password"><br><br>
-        <input type="submit" value="Register">
-    </form>
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" value="username"><br><br>
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" value="password"><br><br>
+    <label for="confirm-password">Confirm Password:</label>
+    <input type="password" id="confirm-password" name="confirm-password" value="password"><br><br>
+    <button id="register">Register</button>
+
+    <script>
+        document.getElementById('register').onclick = () => {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            if (password !== confirmPassword) {
+                console.error('Passwords do not match');
+                return;
+            }
+            fetch(`/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: document.getElementById('username').value,
+                    password
+                }),
+            }).then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                }
+            });
+        };
+    </script>
 </body>
 
 </html>

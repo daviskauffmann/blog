@@ -1,0 +1,29 @@
+<nav>
+    <a href="/">Home |</a>
+    <% if (user) { %>
+    <a href="/add-post">Add Post |</a>
+    <a href="/images">Images |</a>
+    <a href="/add-image">Add Image |</a>
+    <a href="javascript:logout();">Logout</a>
+    <% } else { %>
+    <a id="login-link">Login</a> |
+    <a id="register-link">Register</a>
+    <% } %>
+</nav>
+
+<script>
+    // <% if (!user) { %>
+    document.getElementById('login-link').href = `/login?returnurl=${window.location.href}`;
+    document.getElementById('register-link').href = `/register?returnurl=${window.location.href}`;
+    // <% } %>
+
+    function logout() {
+        fetch(`/logout?returnurl=${window.location.href}`, {
+            method: 'POST',
+        }).then(response => {
+            if (response.redirected) {
+                window.location.href = response.url;
+            }
+        });
+    }
+</script>

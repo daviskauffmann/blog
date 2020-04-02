@@ -8,13 +8,31 @@
 </head>
 
 <body>
-    <form action="/login" method="post">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" value="username"><br><br>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" value="password"><br><br>
-        <input type="submit" value="Login">
-    </form>
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" value="username"><br><br>
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" value="password"><br><br>
+    <button id="login">Login</button>
+
+    <script>
+        document.getElementById('login').onclick = () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            fetch(`/login${urlParams.has('returnurl') ? `?returnurl=${urlParams.get('returnurl')}` : ''}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: document.getElementById('username').value,
+                    password: document.getElementById('password').value,
+                }),
+            }).then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                }
+            });
+        };
+    </script>
 </body>
 
 </html>

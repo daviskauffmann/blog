@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <%- include('header') %>
+
+    <% for(let i = 0; i < images.length; i++) { %>
+    <img src="/images/<%= images[i].filename %>">
+    <button id="delete-<%= images[i]._id %>">Delete</button>
+    <% } %>
+
+    <script>
+        // <% for(let i = 0; i < images.length; i++) { %>
+        document.getElementById('delete-<%= images[i]._id %>').onclick = () => {
+            console.log()
+            fetch('images/<%= images[i]._id %>', {
+                method: 'DELETE'
+            }).then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                }
+            });
+        };
+        // <% } %>
+    </script>
+</body>
+
+</html>

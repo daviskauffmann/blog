@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <%- include('header') %>
+
+    <% if (post) { %>
+    <div id="post"></div>
+    <% if (user) { %>
+    <button id="edit">Edit</button>
+    <button id="delete">Delete</button>
+    <% } %>
+    <% } else { %>
+    Post not found!
+    <% } %>
+
+    <%- include('footer') %>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.8.2/marked.js"></script>
+    <script>
+        // <% if (post) { %>
+        document.getElementById('post').innerHTML = marked(`<%= post.content %>`);
+        // <% if (user) { %>
+        document.getElementById('delete').onclick = e => {
+            fetch('<%= post._id %>', {
+                method: 'DELETE',
+            }).then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                }
+            });
+        };
+        // <% } %>
+        // <% } %>
+    </script>
+</body>
+
+</html>
