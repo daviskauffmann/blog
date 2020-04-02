@@ -24,8 +24,15 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.8.2/marked.js"></script>
     <script>
+        class Renderer extends marked.Renderer {
+            image(href, title, text) {
+                return super.image(`../images/${href}`, title, text);
+            }
+        }
+
         // <% if (post) { %>
-        document.getElementById('post').innerHTML = marked(`<%= post.content %>`);
+        const renderer = new Renderer();
+        document.getElementById('post').innerHTML = marked(`<%= post.content %>`, { renderer });
         // <% if (user) { %>
         document.getElementById('delete').onclick = e => {
             fetch('<%= post._id %>', {
