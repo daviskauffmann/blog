@@ -10,14 +10,11 @@
 <body>
     <%- include('header') %>
 
-    <% if (post) { %>
     <div id="post"></div>
-    <% if (user) { %>
+
+    <% if (user && user.username == username) { %>
     <button id="edit">Edit</button>
     <button id="delete">Delete</button>
-    <% } %>
-    <% } else { %>
-    Post not found!
     <% } %>
 
     <%- include('footer') %>
@@ -26,16 +23,16 @@
     <script>
         class Renderer extends marked.Renderer {
             image(href, title, text) {
-                return super.image(`../images/${href}`, title, text);
+                return super.image(`/<%= username %>/images/${href}`, title, text);
             }
         }
 
-        // <% if (post) { %>
         const renderer = new Renderer();
         document.getElementById('post').innerHTML = marked(`<%= post.content %>`, { renderer });
-        // <% if (user) { %>
+
+        // <% if (user && user.username == username) { %>
         document.getElementById('delete').onclick = e => {
-            fetch('<%= post._id %>', {
+            fetch('/admin/posts/<%= post._id %>', {
                 method: 'DELETE',
             }).then(response => {
                 if (response.redirected) {
@@ -43,7 +40,6 @@
                 }
             });
         };
-        // <% } %>
         // <% } %>
     </script>
 </body>

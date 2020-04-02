@@ -24,7 +24,7 @@
             reader.readAsDataURL(file);
             reader.onload = () => {
                 const data = reader.result;
-                fetch('/images', {
+                fetch('/admin/images', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

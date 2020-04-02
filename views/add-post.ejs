@@ -28,7 +28,7 @@
             reader.readAsText(document.getElementById('file').files[0]);
             reader.onload = e => {
                 const content = e.target.result;
-                fetch('/posts', {
+                fetch('/admin/posts', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
