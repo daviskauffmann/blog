@@ -24,7 +24,14 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.8.2/marked.js"></script>
     <script>
-        document.getElementById('post').innerHTML = marked(`<%= post.content %>`);
+        class Renderer extends marked.Renderer {
+            image(href, title, text) {
+                return super.image(`../images/${href}`, title, text);
+            }
+        }
+
+        const renderer = new Renderer();
+        document.getElementById('post').innerHTML = marked(`<%= post.content %>`, { renderer });
 
         // <% if (user) { %>
         document.getElementById('comment').onclick = e => {

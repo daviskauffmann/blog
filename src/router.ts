@@ -41,19 +41,23 @@ router.get('/register', (req, res) => {
 });
 
 router.post('/register', (req, res, next) => {
-    bcrypt.hash(req.body.password, 12, (err, encrypted) => {
+    User.findOne({ username: req.body.username }, (err, user) => {
         if (err) return next(err);
-        const user = new User({
-            username: req.body.username,
-            email: req.body.email,
-            password: encrypted,
-            roles: [],
-        });
-        user.save((err, user) => {
+        if (user) return res.sendStatus(409);
+        bcrypt.hash(req.body.password, 12, (err, encrypted) => {
             if (err) return next(err);
-            req.login(user, err => {
+            const user = new User({
+                username: req.body.username,
+                email: req.body.email,
+                password: encrypted,
+                roles: [],
+            });
+            user.save((err, user) => {
                 if (err) return next(err);
-                res.redirect(req.query.returnurl || '/');
+                req.login(user, err => {
+                    if (err) return next(err);
+                    res.redirect(req.query.returnurl || '/');
+                });
             });
         });
     });

@@ -9,3 +9,7 @@ dist
 
 # Coverage reports
 coverage
+
+# SSL certs
+ssl.cert
+ssl.key

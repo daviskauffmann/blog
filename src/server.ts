@@ -1,10 +1,11 @@
-import http from 'http';
+import fs from 'fs';
+import https from 'https';
 import mongoose from 'mongoose';
 import app from './app';
 
-const server = http.createServer({
-    // key: fs.readFileSync('server.key'),
-    // cert: fs.readFileSync('server.cert')
+const server = https.createServer({
+    key: fs.readFileSync('ssl.key'),
+    cert: fs.readFileSync('ssl.cert'),
 }, app);
 
 mongoose.connect(process.env.MONGODB_URI!, {
