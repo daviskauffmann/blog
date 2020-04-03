@@ -13,6 +13,7 @@ mongoose.connect(process.env.MONGODB_URI!, {
     useCreateIndex: true,
 }, err => {
     if (err) throw err;
+    // TODO: seed with admin user
     console.log(`Connected to ${process.env.MONGODB_URI}`);
     server.listen(process.env.PORT, () => {
         console.log(`Server listening on port ${process.env.PORT}`);

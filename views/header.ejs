@@ -16,7 +16,7 @@
 <script>
     // <% if (user) { %>
     function logout() {
-        fetch(`/logout`, {
+        fetch('/logout', {
             method: 'POST',
         }).then(response => {
             if (response.redirected) {

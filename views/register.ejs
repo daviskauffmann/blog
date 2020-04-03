@@ -10,11 +10,14 @@
 <body>
     <label for="username">Username:</label>
     <input type="text" id="username" name="username" value="admin"><br><br>
+    <label for="email">Email:</label>
+    <input type="text" id="email" name="email" value="daviskauffmann@gmail.com"><br><br>
     <label for="password">Password:</label>
     <input type="password" id="password" name="password" value="admin"><br><br>
     <label for="confirm-password">Confirm Password:</label>
     <input type="password" id="confirm-password" name="confirm-password" value="admin"><br><br>
     <button id="register">Register</button>
+    <a href="/">Back</a>
 
     <script>
         document.getElementById('register').onclick = () => {
@@ -24,13 +27,14 @@
                 console.error('Passwords do not match');
                 return;
             }
-            fetch(`/register`, {
+            fetch('/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
                     username: document.getElementById('username').value,
+                    email: document.getElementById('email').value,
                     password
                 }),
             }).then(response => {

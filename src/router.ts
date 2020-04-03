@@ -45,7 +45,9 @@ router.post('/register', (req, res, next) => {
         if (err) return next(err);
         const user = new User({
             username: req.body.username,
+            email: req.body.email,
             password: encrypted,
+            roles: [],
         });
         user.save((err, user) => {
             if (err) return next(err);
@@ -70,6 +72,32 @@ router.post('/login', (req, res, next) => {
             res.redirect(req.query.returnurl || '/');
         });
     })(req, res, next);
+});
+
+router.get('/forgot-password', (req, res) => {
+    res.render('forgot-password');
+});
+
+router.post('/send-link', (req, res, next) => {
+    User.findOne({ email: req.body.email }, (err, user) => {
+        if (err) return next(err);
+        if (!user) return res.sendStatus(400);
+        // TODO: send email containing link to /reset-password with jwt in query
+        // jwt should contain the user id in sub claim
+        // jwt should expire in 15 minutes
+        res.redirect('/');
+    });
+});
+
+router.get('/reset-password', (req, res) => {
+    res.render('reset-password');
+});
+
+router.post('/reset-password', (req, res) => {
+    // TODO: verify jwt from query
+    // update user from jwt with password in body
+    // login user and redirect to home
+    res.sendStatus(501);
 });
 
 router.post('/logout', (req, res) => {
