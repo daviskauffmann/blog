@@ -28,19 +28,22 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(session({
     secret: process.env.SESSION_SECRET!,
-    resave: false,
-    saveUninitialized: false,
+    store,
     cookie: {
         maxAge: 1000 * 60 * 60 * 24 * 7,
+        httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
     },
-    store,
+    resave: false,
+    saveUninitialized: false,
 }));
 
 app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(router);
+
+app.use(express.static('public'));
 
 if (process.env.NODE_ENV === 'production') {
     app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {

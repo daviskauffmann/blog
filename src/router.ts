@@ -1,30 +1,13 @@
 import bcrypt from 'bcrypt';
 import express from 'express';
 import passport from 'passport';
+import authenticate from './middleware/authenticate';
+import authorize from './middleware/authorize';
 import Image from './models/Image';
 import Post from './models/Post';
 import User from './models/User';
 
 const router = express.Router();
-
-const authenticate: express.RequestHandler = (req, res, next) => {
-    if (req.user) {
-        next();
-    } else {
-        res.redirect(`/login?returnurl=${req.protocol}://${req.headers.host}${req.path}`);
-    }
-};
-
-function authorize(roles: string[]): express.RequestHandler {
-    return (req, res, next) => {
-        for (const role of roles) {
-            if (!(req.user as User).roles.includes(role)) {
-                return res.sendStatus(403);
-            }
-        }
-        next();
-    };
-}
 
 router.get('/', (req, res, next) => {
     Post.find((err, posts) => {
