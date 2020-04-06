@@ -1,5 +1,7 @@
 import bcrypt from 'bcrypt';
 import express from 'express';
+import jwt from 'jsonwebtoken';
+import nodemailer from 'nodemailer';
 import passport from 'passport';
 import authenticate from './middleware/authenticate';
 import authorize from './middleware/authorize';
@@ -66,13 +68,33 @@ router.get('/forgot-password', (req, res) => {
 });
 
 router.post('/send-link', (req, res, next) => {
-    User.findOne({ email: req.body.email }, (err, user) => {
+    User.findOne({ username: req.body.username }, (err, user) => {
         if (err) return next(err);
         if (!user) return res.sendStatus(400);
-        // TODO: send email containing link to /reset-password with jwt in query
-        // jwt should contain the user id in sub claim
-        // jwt should expire in 15 minutes
-        res.redirect('/');
+        jwt.sign({
+            sub: user.id,
+        }, process.env.JWT_SECRET!, {
+            expiresIn: '15m',
+        }, (err, encoded) => {
+            if (err) return next(err);
+            // TODO: move this somewhere else and allow more options instead of gmail
+            const mail = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: process.env.GMAIL_USERNAME,
+                    pass: process.env.GMAIL_PASSWORD,
+                },
+            });
+            mail.sendMail({
+                from: 'daviskauffmann@gmail.com',
+                to: user.email,
+                subject: 'Password Reset',
+                text: `${req.protocol}://${req.hostname}:${process.env.PORT}/reset-password?token=${encoded}`,
+            }, err => {
+                if (err) return next(err);
+                res.redirect('/');
+            });
+        });
     });
 });
 
@@ -80,11 +102,28 @@ router.get('/reset-password', (req, res) => {
     res.render('reset-password');
 });
 
-router.post('/reset-password', (req, res) => {
-    // TODO: verify jwt from query
-    // update user from jwt with password in body
-    // login user and redirect to home
-    res.sendStatus(501);
+router.post('/reset-password', (req, res, next) => {
+    const token = req.query.token
+    jwt.verify(token, process.env.JWT_SECRET!, {}, (err, payload: any) => {
+        if (err) return next(err);
+        const id = payload.sub;
+        bcrypt.hash(req.body.password, 12, (err, encrypted) => {
+            if (err) return next(err);
+            User.updateOne({ _id: id }, {
+                password: encrypted,
+            }, err => {
+                if (err) return next(err);
+                User.findById(id, (err, user) => {
+                    if (err) return next(err);
+                    if (!user) return next(new Error('Unable to find user after updating password'));
+                    req.login(user, err => {
+                        if (err) return next(err);
+                        res.redirect('/');
+                    });
+                });
+            });
+        });
+    });
 });
 
 router.post('/logout', (req, res) => {

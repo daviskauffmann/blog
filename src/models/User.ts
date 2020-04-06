@@ -7,7 +7,7 @@ interface User extends Document {
     roles: string[];
 }
 
-const schema = new Schema({
+const schema = new Schema<User>({
     username: {
         type: String,
         required: true,
@@ -16,7 +16,6 @@ const schema = new Schema({
     email: {
         type: String,
         required: true,
-        unique: true,
     },
     password: {
         type: String,

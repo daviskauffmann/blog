@@ -48,19 +48,27 @@ app.use(express.static('public'));
 if (process.env.NODE_ENV === 'production') {
     app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
         console.error(err);
-        res.status(500).send({
-            name: err.name,
-            message: err.message,
-        });
+        if (res.headersSent) {
+            next(err);
+        } else {
+            res.status(500).send({
+                name: err.name,
+                message: err.message,
+            });
+        }
     });
 } else {
     app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
         console.error(err);
-        res.status(500).send({
-            name: err.name,
-            message: err.message,
-            stack: err.stack,
-        });
+        if (res.headersSent) {
+            next(err);
+        } else {
+            res.status(500).send({
+                name: err.name,
+                message: err.message,
+                stack: err.stack,
+            });
+        }
     });
 }
 
