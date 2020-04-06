@@ -7,9 +7,12 @@ mongoose.connect(process.env.MONGODB_URI!, {
     useCreateIndex: true,
 }, err => {
     if (err) throw err;
-    // TODO: seed with admin user
     console.log(`Connected to ${process.env.MONGODB_URI}`);
-    app.listen(process.env.PORT, () => {
-        console.log(`Server listening on port ${process.env.PORT}`);
+
+    // TODO: seed with admin user
+
+    const port = process.env.PORT || 3000;
+    app.listen(port, () => {
+        console.log(`Server listening on port ${port}`);
     });
 });
