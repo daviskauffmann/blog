@@ -1,10 +1,12 @@
 import bcrypt from 'bcrypt';
 import express from 'express';
+import { body } from 'express-validator';
 import jwt from 'jsonwebtoken';
 import nodemailer from 'nodemailer';
 import passport from 'passport';
 import authenticate from './middleware/authenticate';
 import authorize from './middleware/authorize';
+import validate from './middleware/validate';
 import Image from './models/Image';
 import Post from './models/Post';
 import User from './models/User';
@@ -25,19 +27,22 @@ router.get('/register', (req, res) => {
     res.render('register');
 });
 
-router.post('/register', (req, res, next) => {
+router.post('/register', validate([
+    body('username').isString(),
+    body('email').isEmail().normalizeEmail(),
+    body('password').isString(),
+]), (req, res, next) => {
     User.findOne({ username: req.body.username }, (err, user) => {
         if (err) return next(err);
         if (user) return res.sendStatus(409);
         bcrypt.hash(req.body.password, 12, (err, encrypted) => {
             if (err) return next(err);
-            const user = new User({
+            new User({
                 username: req.body.username,
                 email: req.body.email,
                 password: encrypted,
                 roles: [],
-            });
-            user.save((err, user) => {
+            }).save((err, user) => {
                 if (err) return next(err);
                 req.login(user, err => {
                     if (err) return next(err);
@@ -67,7 +72,9 @@ router.get('/forgot-password', (req, res) => {
     res.render('forgot-password');
 });
 
-router.post('/send-link', (req, res, next) => {
+router.post('/send-link', validate([
+    body('username').isString(),
+]), (req, res, next) => {
     User.findOne({ username: req.body.username }, (err, user) => {
         if (err) return next(err);
         if (!user) return res.sendStatus(400);
@@ -102,7 +109,9 @@ router.get('/reset-password', (req, res) => {
     res.render('reset-password');
 });
 
-router.post('/reset-password', (req, res, next) => {
+router.post('/reset-password', validate([
+    body('password').isString(),
+]), (req, res, next) => {
     const token = req.query.token
     jwt.verify(token, process.env.JWT_SECRET!, {}, (err, payload: any) => {
         if (err) return next(err);
@@ -166,15 +175,22 @@ router.get('/admin/add-post', authenticate, authorize(['admin']), (req, res, nex
     });
 });
 
-router.post('/admin/posts', authenticate, authorize(['admin']), (req, res, next) => {
-    const post = new Post({
-        title: req.body.title,
-        slug: req.body.slug,
-        content: req.body.content,
-    });
-    post.save((err, post) => {
+router.post('/admin/posts', authenticate, authorize(['admin']), validate([
+    body('title').isString(),
+    body('slug').isString().not().contains(' '),
+    body('content').isString(),
+]), (req, res, next) => {
+    Post.findOne({ slug: req.body.slug }, (err, post) => {
         if (err) return next(err);
-        res.redirect(`/posts/${post.slug}`);
+        if (post) return res.sendStatus(409);
+        new Post({
+            title: req.body.title,
+            slug: req.body.slug,
+            content: req.body.content,
+        }).save((err, post) => {
+            if (err) return next(err);
+            res.redirect(`/posts/${post.slug}`);
+        });
     });
 });
 
@@ -201,14 +217,20 @@ router.get('/admin/add-image', authenticate, (req, res, next) => {
     });
 });
 
-router.post('/admin/images', authenticate, (req, res, next) => {
-    const image = new Image({
-        filename: req.body.filename,
-        data: req.body.data,
-    });
-    image.save((err, image) => {
+router.post('/admin/images', authenticate, authorize(['admin']), validate([
+    body('filename').isString(),
+    body('data').isString(),
+]), (req, res, next) => {
+    Image.findOne({ filename: req.body.filename }, (err, image) => {
         if (err) return next(err);
-        res.redirect('/admin/images');
+        if (image) return res.sendStatus(409);
+        new Image({
+            filename: req.body.filename,
+            data: req.body.data,
+        }).save((err, image) => {
+            if (err) return next(err);
+            res.redirect('/admin/images');
+        });
     });
 });
 
