@@ -23,7 +23,7 @@
 
     <%- include('footer') %>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.8.2/marked.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
         class Renderer extends marked.Renderer {
             image(href, title, text) {
@@ -43,7 +43,7 @@
             console.log('TODO: edit');
         };
         document.getElementById('delete').onclick = e => {
-            fetch('/admin/posts/<%= post._id %>', {
+            fetch('/admin/posts/<%= post.id %>', {
                 method: 'DELETE',
             }).then(response => {
                 if (response.redirected) {

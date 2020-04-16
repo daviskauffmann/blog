@@ -1,15 +1,15 @@
-import express from 'express';
 import User from '../models/User';
+import expressAsync from '../utils/expressAsync';
 
-function authorize(roles: string[]): express.RequestHandler {
-    return function (req, res, next) {
+function authorize(roles: string[]) {
+    return expressAsync(async (req, res) => {
         for (const role of roles) {
             if (!(req.user as User).roles.includes(role)) {
-                return res.sendStatus(403);
+                res.sendStatus(403);
+                return;
             }
         }
-        next();
-    };
+    });
 };
 
 export default authorize;

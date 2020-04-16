@@ -1,23 +1,27 @@
-import { Document, model, Schema, Types } from 'mongoose';
+import { INTEGER, Model, STRING, TEXT } from 'sequelize';
+import sequelize from '../sequelize';
 
-interface Image extends Document {
-    filename: string;
-    data: string;
+export default class Image extends Model {
+    id!: number;
+    filename!: string;
+    data!: string;
+    createdAt!: Date;
+    updatedAt!: Date;
 }
 
-const schema = new Schema({
+Image.init({
+    id: {
+        type: INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+    },
     filename: {
-        type: String,
-        required: true,
+        type: STRING,
         unique: true,
+        allowNull: false,
     },
     data: {
-        type: String,
-        required: true,
+        type: TEXT,
+        allowNull: false,
     },
-});
-
-const Image = model<Image>('Image', schema);
-
-export default Image;
-
+}, { sequelize });

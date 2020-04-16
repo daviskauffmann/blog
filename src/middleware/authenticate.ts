@@ -1,10 +1,9 @@
-import express from 'express';
+import expressAsync from '../utils/expressAsync';
 
-const authenticate: express.RequestHandler = (req, res, next) => {
+const authenticate = expressAsync(async (req, res) => {
     if (!req.user) {
-        return res.redirect(`/login?returnurl=${req.protocol}://${req.headers.host}${req.path}`);
+        res.redirect(`/login?returnurl=${req.protocol}://${req.headers.host}${req.path}`);
     }
-    next();
-};
+});
 
 export default authenticate;

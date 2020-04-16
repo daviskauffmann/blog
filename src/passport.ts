@@ -4,8 +4,7 @@ import { Strategy as LocalStrategy } from 'passport-local';
 import User from './models/User';
 
 passport.use(new LocalStrategy((username, password, done) => {
-    User.findOne({ username }, (err, user) => {
-        if (err) return done(err);
+    User.findOne({ where: { username } }).then(user => {
         if (!user) return done(null, false);
         bcrypt.compare(password, user.password, (err, same) => {
             if (err) return done(err);
@@ -16,12 +15,12 @@ passport.use(new LocalStrategy((username, password, done) => {
 }));
 
 passport.serializeUser<User, string>((user, done) => {
-    done(null, user.id);
+    console.log(user);
+    done(null, user.id.toString());
 });
 
 passport.deserializeUser<User, string>((id, done) => {
-    User.findById(id, (err, user) => {
-        if (err) return done(err);
+    User.findByPk(id).then(user => {
         done(null, user || undefined);
     });
 });

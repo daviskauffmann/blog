@@ -1,28 +1,41 @@
-import { Document, model, Schema, Types } from 'mongoose';
+import { INTEGER, Model, STRING, TEXT } from 'sequelize';
+import slugify from 'slugify';
+import sequelize from '../sequelize';
 
-interface Post extends Document {
-    title: String;
-    slug: string;
-    content: string;
+export default class Post extends Model {
+    id!: number;
+    title!: string;
+    slug!: string;
+    content!: string;
+    createdAt!: Date;
+    updatedAt!: Date;
 }
 
-const schema = new Schema({
+Post.init({
+    id: {
+        type: INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+    },
     title: {
-        type: String,
-        required: true,
+        type: STRING,
+        unique: true,
+        allowNull: false,
     },
     slug: {
-        type: String,
-        required: true,
+        type: STRING,
         unique: true,
+        allowNull: false,
     },
     content: {
-        type: String,
-        required: true,
+        type: TEXT,
+        allowNull: false,
     },
+}, { sequelize });
+
+Post.beforeValidate(post => {
+    post.slug = slugify(post.title, {
+        lower: true,
+        strict: true,
+    });
 });
-
-const Post = model<Post>('Post', schema);
-
-export default Post;
-

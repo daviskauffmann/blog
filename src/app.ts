@@ -1,4 +1,3 @@
-import connectMongodbSession from 'connect-mongodb-session';
 import cors from 'cors';
 import express from 'express';
 import session from 'express-session';
@@ -7,12 +6,8 @@ import morgan from 'morgan';
 import passport from 'passport';
 import './passport';
 import router from './router';
-
-const MongoDBStore = connectMongodbSession(session);
-const store = new MongoDBStore({
-    uri: process.env.MONGODB_URI!,
-    collection: 'sessions',
-});
+import sequelize from './sequelize';
+const SessionStore = require('express-session-sequelize')(session.Store);
 
 const app = express();
 
@@ -28,7 +23,9 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(session({
     secret: process.env.SESSION_SECRET!,
-    store,
+    store: new SessionStore({
+        db: sequelize,
+    }),
     cookie: {
         maxAge: 1000 * 60 * 60 * 24 * 7,
         httpOnly: true,

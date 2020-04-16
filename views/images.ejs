@@ -13,14 +13,14 @@
 
     <% for(let i = 0; i < images.length; i++) { %>
     <img src="/images/<%= images[i].filename %>">
-    <button id="delete-<%= images[i]._id %>">Delete</button>
+    <button id="delete-<%= images[i].id %>">Delete</button>
     <% } %>
 
     <script>
         // <% for(let i = 0; i < images.length; i++) { %>
-        document.getElementById('delete-<%= images[i]._id %>').onclick = () => {
+        document.getElementById('delete-<%= images[i].id %>').onclick = () => {
             console.log()
-            fetch('/admin/images/<%= images[i]._id %>', {
+            fetch('/admin/images/<%= images[i].id %>', {
                 method: 'DELETE'
             }).then(response => {
                 if (response.redirected) {

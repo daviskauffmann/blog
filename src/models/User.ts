@@ -1,33 +1,45 @@
-import { Document, model, Schema } from 'mongoose';
+import bcrypt from 'bcrypt';
+import { Model, STRING, ARRAY, INTEGER } from 'sequelize';
+import sequelize from '../sequelize';
 
-interface User extends Document {
-    username: string;
-    email: string;
-    password: string;
-    roles: string[];
+export default class User extends Model {
+    id!: number;
+    username!: string;
+    password!: string;
+    email!: string;
+    roles!: string[];
+    createdAt!: Date;
+    updatedAt!: Date;
 }
 
-const schema = new Schema<User>({
-    username: {
-        type: String,
-        required: true,
-        unique: true,
+User.init({
+    id: {
+        type: INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
     },
-    email: {
-        type: String,
-        required: true,
+    username: {
+        type: STRING,
+        unique: true,
+        allowNull: false,
     },
     password: {
-        type: String,
-        required: true,
+        type: STRING,
+        allowNull: false,
+    },
+    email: {
+        type: STRING,
+        allowNull: false,
+        validate: {
+            isEmail: true,
+        }
     },
     roles: {
-        type: [String],
-        required: true,
-    }
+        type: ARRAY(STRING),
+        allowNull: false,
+    },
+}, { sequelize });
+
+User.beforeValidate(async user => {
+    user.password = await bcrypt.hash(user.password, 12);
 });
-
-const User = model<User>('User', schema);
-
-export default User;
-
