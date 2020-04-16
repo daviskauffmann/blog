@@ -15,7 +15,6 @@ passport.use(new LocalStrategy((username, password, done) => {
 }));
 
 passport.serializeUser<User, string>((user, done) => {
-    console.log(user);
     done(null, user.id.toString());
 });
 

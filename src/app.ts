@@ -1,3 +1,4 @@
+import connectRedis from 'connect-redis';
 import cors from 'cors';
 import express from 'express';
 import session from 'express-session';
@@ -5,9 +6,10 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import passport from 'passport';
 import './passport';
+import redisClient from './redisClient';
 import router from './router';
-import sequelize from './sequelize';
-const SessionStore = require('express-session-sequelize')(session.Store);
+
+const RedisStore = connectRedis(session);
 
 const app = express();
 
@@ -23,9 +25,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(session({
     secret: process.env.SESSION_SECRET!,
-    store: new SessionStore({
-        db: sequelize,
-    }),
+    store: new RedisStore({ client: redisClient }),
     cookie: {
         maxAge: 1000 * 60 * 60 * 24 * 7,
         httpOnly: true,
