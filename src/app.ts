@@ -4,8 +4,7 @@ import express from 'express';
 import session from 'express-session';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import passport from 'passport';
-import './passport';
+import passport from './passport';
 import redisClient from './redisClient';
 import router from './router';
 

@@ -23,3 +23,5 @@ passport.deserializeUser<User, string>((id, done) => {
         done(null, user || undefined);
     });
 });
+
+export default passport;
