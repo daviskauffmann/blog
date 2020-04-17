@@ -6,9 +6,10 @@
     <a href="/admin/images">Images</a> |
     <a href="/admin/add-image">Add Image</a> |
     <% } %>
+    <a href="/reset-password">Reset Password</a> |
     <a href="javascript:logout();">Logout</a>
     <% } else { %>
-    <a id="register-link">Register</a> |
+    <a href="/register">Register</a> |
     <a id="login-link">Login</a>
     <% } %>
 </nav>
@@ -19,13 +20,10 @@
         fetch('/logout', {
             method: 'POST',
         }).then(response => {
-            if (response.redirected) {
-                window.location.href = response.url;
-            }
+            window.location.href = '/';
         });
     }
     //<% } else { %>
-    document.getElementById('register-link').href = `/register?returnurl=${window.location.href}`;
     document.getElementById('login-link').href = `/login?returnurl=${window.location.href}`;
     // <% } %>
 </script>

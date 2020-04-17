@@ -46,9 +46,7 @@
             fetch('/admin/posts/<%= post.id %>', {
                 method: 'DELETE',
             }).then(response => {
-                if (response.redirected) {
-                    window.location.href = response.url;
-                }
+                window.location.href = '/';
             });
         };
         // <% } %>

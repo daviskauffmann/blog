@@ -2,14 +2,6 @@ import Post from '../models/Post';
 import expressAsync from '../utils/expressAsync';
 
 export default {
-    postsPage: expressAsync(async (req, res) => {
-        const posts = await Post.findAll();
-
-        res.render('index', {
-            user: req.user,
-            posts,
-        });
-    }),
     postPage: expressAsync(async (req, res) => {
         const post = await Post.findOne({ where: { slug: req.params.slug } });
         if (!post) {
@@ -39,11 +31,11 @@ export default {
             content: req.body.content,
         });
 
-        res.redirect(`/posts/${post.slug}`);
+        res.status(201).send(post);
     }),
     deletePost: expressAsync(async (req, res) => {
         await Post.destroy({ where: { id: req.params.id } });
 
-        res.redirect('/');
+        res.sendStatus(200);
     }),
 };

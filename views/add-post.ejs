@@ -37,9 +37,9 @@
                         content,
                     }),
                 }).then(response => {
-                    if (response.redirected) {
-                        window.location.href = response.url;
-                    }
+                    response.json().then(post => {
+                        window.location.href = `/posts/${post.slug}`;
+                    });
                 });
             };
         };

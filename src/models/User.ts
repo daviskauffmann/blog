@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import { Model, STRING, ARRAY, INTEGER } from 'sequelize';
+import { Model, STRING, ARRAY, INTEGER, BOOLEAN } from 'sequelize';
 import sequelize from '../sequelize';
 
 export default class User extends Model {
@@ -7,9 +7,14 @@ export default class User extends Model {
     username!: string;
     password!: string;
     email!: string;
+    verified!: boolean;
     roles!: string[];
     createdAt!: Date;
     updatedAt!: Date;
+
+    async comparePassword(password: string): Promise<boolean> {
+        return bcrypt.compare(password, this.password);
+    }
 }
 
 User.init({
@@ -34,12 +39,20 @@ User.init({
             isEmail: true,
         }
     },
+    verified: {
+        type: BOOLEAN,
+        allowNull: false,
+    },
     roles: {
         type: ARRAY(STRING),
         allowNull: false,
     },
-}, { sequelize });
+}, {
+    sequelize,
+});
 
 User.beforeValidate(async user => {
-    user.password = await bcrypt.hash(user.password, 12);
+    if (user.password) {
+        user.password = await bcrypt.hash(user.password, 12);
+    }
 });

@@ -6,4 +6,8 @@ const redisClient = redis.createClient({
     password: process.env.REDIS_PASSWORD,
 });
 
+redisClient.on('connect', () => {
+    console.log(`Connected to ${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`);
+});
+
 export default redisClient;

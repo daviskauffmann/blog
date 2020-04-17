@@ -24,4 +24,6 @@ Image.init({
         type: TEXT,
         allowNull: false,
     },
-}, { sequelize });
+}, {
+    sequelize,
+});

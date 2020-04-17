@@ -31,7 +31,9 @@ Post.init({
         type: TEXT,
         allowNull: false,
     },
-}, { sequelize });
+}, {
+    sequelize,
+});
 
 Post.beforeValidate(post => {
     post.slug = slugify(post.title, {

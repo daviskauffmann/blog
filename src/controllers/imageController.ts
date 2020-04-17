@@ -25,7 +25,7 @@ export default {
     deleteImage: expressAsync(async (req, res) => {
         await Image.destroy({ where: { id: req.params.id } });
 
-        res.redirect('/admin/images');
+        res.sendStatus(200);
     }),
     addImagePage: expressAsync(async (req, res) => {
         res.render('add-image', {
@@ -39,11 +39,11 @@ export default {
             return;
         }
 
-        await Image.create({
+        const image = await Image.create({
             filename: req.body.filename,
             data: req.body.data,
         });
 
-        res.redirect('/admin/images');
+        res.status(201).send(image);
     }),
 };

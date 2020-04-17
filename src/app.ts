@@ -1,6 +1,7 @@
 import connectRedis from 'connect-redis';
 import cors from 'cors';
 import express from 'express';
+import flash from 'express-flash';
 import session from 'express-session';
 import helmet from 'helmet';
 import morgan from 'morgan';
@@ -36,6 +37,8 @@ app.use(session({
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use(flash());
 
 app.use(router);
 

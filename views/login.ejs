@@ -20,8 +20,7 @@
 
     <script>
         document.getElementById('login').onclick = () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            fetch(`/login${urlParams.has('returnurl') ? `?returnurl=${urlParams.get('returnurl')}` : ''}`, {
+            fetch('/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -31,8 +30,11 @@
                     password: document.getElementById('password').value,
                 }),
             }).then(response => {
-                if (response.redirected) {
-                    window.location.href = response.url;
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.has('returnurl')) {
+                    window.location.href = urlParams.get('returnurl')
+                } else {
+                    window.location.href = '/';
                 }
             });
         };

@@ -1,6 +1,7 @@
 import express from 'express';
-import { body } from 'express-validator';
+import { body, query } from 'express-validator';
 import authController from './controllers/authController';
+import homeController from './controllers/homeController';
 import imageController from './controllers/imageController';
 import postController from './controllers/postController';
 import authenticate from './middleware/authenticate';
@@ -10,7 +11,7 @@ import validate from './middleware/validate';
 const router = express.Router();
 
 router.get('/',
-    postController.postsPage);
+    homeController.homePage);
 
 router.get('/register',
     authController.registerPage);
@@ -29,6 +30,25 @@ router.get('/login',
 router.post('/login',
     authController.login);
 
+router.get('/verify-email',
+    authenticate,
+    validate([
+        query('token').isString(),
+    ]),
+    authController.verifyEmail);
+
+router.get('/reset-password',
+    authenticate,
+    authController.resetPasswordPage);
+
+router.post('/reset-password',
+    authenticate,
+    validate([
+        body('currentPassword').isString(),
+        body('newPassword').isString(),
+    ]),
+    authController.resetPassword);
+
 router.get('/forgot-password',
     authController.forgotPasswordPage);
 
@@ -38,14 +58,18 @@ router.post('/send-link',
     ]),
     authController.sendLink);
 
-router.get('/reset-password',
-    authController.resetPasswordPage);
-
-router.post('/reset-password',
+router.get('/reset-password-from-email',
     validate([
+        query('token').isString(),
+    ]),
+    authController.resetPasswordFromEmailPage);
+
+router.post('/reset-password-from-email',
+    validate([
+        query('token').isString(),
         body('password').isString(),
     ]),
-    authController.resetPassword);
+    authController.resetPasswordFromEmail);
 
 router.post('/logout',
     authController.logout);
