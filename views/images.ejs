@@ -23,7 +23,9 @@
             fetch('/admin/images/<%= images[i].id %>', {
                 method: 'DELETE'
             }).then(response => {
-                window.location.href = '/admin/images';
+                if (response.status === 200) {
+                    window.location.href = '/admin/images';
+                }
             });
         };
         // <% } %>

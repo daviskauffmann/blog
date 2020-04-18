@@ -30,11 +30,13 @@
                     password: document.getElementById('password').value,
                 }),
             }).then(response => {
-                const urlParams = new URLSearchParams(window.location.search);
-                if (urlParams.has('returnurl')) {
-                    window.location.href = urlParams.get('returnurl')
-                } else {
-                    window.location.href = '/';
+                if (response.status === 200) {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    if (urlParams.has('returnurl')) {
+                        window.location.href = urlParams.get('returnurl')
+                    } else {
+                        window.location.href = '/';
+                    }
                 }
             });
         };

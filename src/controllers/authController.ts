@@ -4,13 +4,21 @@ import mail from '../mail';
 import User from '../models/User';
 import expressAsync from '../utils/expressAsync';
 import util from 'util';
+import { Op } from 'sequelize';
 
 export default {
     registerPage: expressAsync(async (req, res) => {
         res.render('register');
     }),
     register: expressAsync(async (req, res) => {
-        const existingUser = await User.findOne({ where: { username: req.body.username } });
+        const existingUser = await User.findOne({
+            where: {
+                [Op.or]: [
+                    { username: req.body.username },
+                    { email: req.body.email },
+                ],
+            },
+        });
         if (existingUser) {
             res.sendStatus(409);
             return;
@@ -57,6 +65,18 @@ export default {
 
         res.sendStatus(200);
     }),
+    resendEmailVerification: expressAsync(async (req, res) => {
+        const user = req.user as User;
+        const token = jwt.sign({ sub: user.id }, process.env.JWT_SECRET!, { expiresIn: '24h' });
+        await mail.sendMail({
+            from: process.env.SMTP_USERNAME,
+            to: user.email,
+            subject: 'Verify Email',
+            text: `${req.protocol}://${req.headers.host}/verify-email?token=${token}`,
+        });
+
+        res.sendStatus(200);
+    }),
     verifyEmail: expressAsync(async (req, res) => {
         let payload: any;
         try {
@@ -73,14 +93,14 @@ export default {
         }, { where: { id }, returning: true });
 
         req.flash('message', 'Email successfully verified!');
-        res.sendStatus(200);
+        res.redirect('/');
     }),
-    resetPasswordPage: expressAsync(async (req, res) => {
-        res.render('reset-password', {
+    changePasswordPage: expressAsync(async (req, res) => {
+        res.render('change-password', {
             user: req.user,
         });
     }),
-    resetPassword: expressAsync(async (req, res) => {
+    changePassword: expressAsync(async (req, res) => {
         const user = req.user as User;
 
         const same = await user.comparePassword(req.body.currentPassword);
@@ -93,14 +113,14 @@ export default {
             password: req.body.newPassword,
         }, { where: { id: user.id }, returning: true });
 
-        req.flash('message', 'Password successfully reset!');
+        req.flash('message', 'Password successfully changed!');
         res.sendStatus(200);
     }),
     forgotPasswordPage: expressAsync(async (req, res) => {
         res.render('forgot-password');
     }),
-    sendLink: expressAsync(async (req, res) => {
-        const user = await User.findOne({ where: { username: req.body.username, verified: true } });
+    sendPasswordResetLink: expressAsync(async (req, res) => {
+        const user = await User.findOne({ where: { email: req.body.email, verified: true } });
         if (!user) {
             res.sendStatus(401);
             return;
@@ -111,16 +131,16 @@ export default {
             from: process.env.SMTP_USERNAME,
             to: user.email,
             subject: 'Password Reset',
-            text: `${req.protocol}://${req.headers.host}/reset-password-from-email?token=${token}`,
+            text: `${req.protocol}://${req.headers.host}/reset-password?token=${token}`,
         });
 
         req.flash('message', 'Password reset link sent!');
         res.sendStatus(200);
     }),
-    resetPasswordFromEmailPage: expressAsync(async (req, res) => {
-        res.render('reset-password-from-email');
+    resetPasswordPage: expressAsync(async (req, res) => {
+        res.render('reset-password');
     }),
-    resetPasswordFromEmail: expressAsync(async (req, res) => {
+    resetPassword: expressAsync(async (req, res) => {
         let payload: any;
         try {
             payload = jwt.verify(req.query.token, process.env.JWT_SECRET!);
@@ -133,6 +153,8 @@ export default {
         const id = payload.sub as number;
         const [, [user]] = await User.update({
             password: req.body.password,
+            // TODO: implicit verification?
+            // then, allow unverified users to change password
         }, { where: { id }, returning: true });
 
         const login = util.promisify(req.login.bind(req));
@@ -143,6 +165,7 @@ export default {
     }),
     logout: expressAsync(async (req, res) => {
         req.logout();
+
         res.sendStatus(200);
     }),
 };

@@ -34,6 +34,7 @@ User.init({
     },
     email: {
         type: STRING,
+        unique: true,
         allowNull: false,
         validate: {
             isEmail: true,

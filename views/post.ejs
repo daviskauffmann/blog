@@ -14,10 +14,12 @@
     <div id="post"></div>
 
     <% if (user) { %>
+    <% if (user.verified) { %>
     <button id="comment">Comment</button>
     <% if (user.roles.includes('admin')) { %>
     <button id="edit">Edit</button>
     <button id="delete">Delete</button>
+    <% } %>
     <% } %>
     <% } %>
 
@@ -35,6 +37,7 @@
         document.getElementById('post').innerHTML = marked(`<%= post.content %>`, { renderer });
 
         // <% if (user) { %>
+        // <% if (user.verified) { %>
         document.getElementById('comment').onclick = e => {
             console.log('TODO: comment');
         };
@@ -46,9 +49,12 @@
             fetch('/admin/posts/<%= post.id %>', {
                 method: 'DELETE',
             }).then(response => {
-                window.location.href = '/';
+                if (response.status === 200) {
+                    window.location.href = '/';
+                }
             });
         };
+        // <% } %>
         // <% } %>
         // <% } %>
     </script>

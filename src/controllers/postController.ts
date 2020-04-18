@@ -14,7 +14,7 @@ export default {
             post,
         });
     }),
-    renderAddPost: expressAsync(async (req, res) => {
+    addPostPage: expressAsync(async (req, res) => {
         res.render('add-post', {
             user: req.user,
         });

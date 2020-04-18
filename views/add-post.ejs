@@ -37,9 +37,11 @@
                         content,
                     }),
                 }).then(response => {
-                    response.json().then(post => {
-                        window.location.href = `/posts/${post.slug}`;
-                    });
+                    if (response.status === 201) {
+                        response.json().then(post => {
+                            window.location.href = `/posts/${post.slug}`;
+                        });
+                    }
                 });
             };
         };

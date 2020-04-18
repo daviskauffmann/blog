@@ -30,6 +30,10 @@ router.get('/login',
 router.post('/login',
     authController.login);
 
+router.post('/resend-email-verification',
+    authenticate,
+    authController.resendEmailVerification);
+
 router.get('/verify-email',
     authenticate,
     validate([
@@ -37,39 +41,39 @@ router.get('/verify-email',
     ]),
     authController.verifyEmail);
 
-router.get('/reset-password',
+router.get('/change-password',
     authenticate,
-    authController.resetPasswordPage);
+    authController.changePasswordPage);
 
-router.post('/reset-password',
+router.post('/change-password',
     authenticate,
     validate([
         body('currentPassword').isString(),
         body('newPassword').isString(),
     ]),
-    authController.resetPassword);
+    authController.changePassword);
 
 router.get('/forgot-password',
     authController.forgotPasswordPage);
 
-router.post('/send-link',
+router.post('/send-password-reset-link',
     validate([
         body('username').isString(),
     ]),
-    authController.sendLink);
+    authController.sendPasswordResetLink);
 
-router.get('/reset-password-from-email',
+router.get('/reset-password',
     validate([
         query('token').isString(),
     ]),
-    authController.resetPasswordFromEmailPage);
+    authController.resetPasswordPage);
 
-router.post('/reset-password-from-email',
+router.post('/reset-password',
     validate([
         query('token').isString(),
         body('password').isString(),
     ]),
-    authController.resetPasswordFromEmail);
+    authController.resetPassword);
 
 router.post('/logout',
     authController.logout);
@@ -83,7 +87,7 @@ router.get('/images/:filename',
 router.get('/admin/add-post',
     authenticate,
     authorize(['admin']),
-    postController.renderAddPost);
+    postController.addPostPage);
 
 router.post('/admin/posts',
     authenticate,
@@ -111,6 +115,7 @@ router.delete('/admin/images/:id',
 
 router.get('/admin/add-image',
     authenticate,
+    authorize(['admin']),
     imageController.addImagePage);
 
 router.post('/admin/images',

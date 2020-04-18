@@ -35,7 +35,9 @@
                         data,
                     }),
                 }).then(response => {
-                    window.location.href = '/admin/images';
+                    if (response.status === 201) {
+                        window.location.href = '/admin/images';
+                    }
                 });
             };
         };

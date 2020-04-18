@@ -15,6 +15,7 @@
     <h1>Welcome back, <%= user.username %>!</h1>
     <% if (!user.verified) { %>
     <p>Check your email for a verification link!</p>
+    <a href="javascript:resendEmailVerification()">Resend verification link</a>
     <% } %>
     <% } else { %>
     <h1>Welcome!</h1>
@@ -24,6 +25,8 @@
     <p><%= message %></p>
     <% } %>
 
+    <% if (posts.length) { %>
+    <h2>Posts</h2>
     <ul>
         <% for(let i = 0; i < posts.length; i++) { %>
         <li>
@@ -31,6 +34,19 @@
         </li>
         <% } %>
     </ul>
+    <% } else { %>
+    <h2>No posts yet!</h2>
+    <% } %>
+
+    <script>
+        // <% if (user && !user.verified) { %>
+        function resendEmailVerification() {
+            fetch('/resend-email-verification', {
+                method: 'POST',
+            });
+        }
+        // <% } %>
+    </script>
 </body>
 
 </html>
