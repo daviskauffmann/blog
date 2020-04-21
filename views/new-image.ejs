@@ -4,17 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Post</title>
+    <title>New Image</title>
     <link rel="stylesheet" href="/style.css">
 </head>
 
 <body>
     <%- include('header') %>
 
-    <label for="title">Title:</label>
-    <input type="text" id="title" name="title" value=""><br><br>
     <input type="file" id="file" name="file">
-    <button id="post">Post</button>
+    <button id="upload">Upload</button>
 
     <script>
         let file;
@@ -22,25 +20,23 @@
             file = e.target.files[0];
         };
 
-        document.getElementById('post').onclick = () => {
+        document.getElementById('upload').onclick = () => {
             const reader = new FileReader();
-            reader.readAsText(document.getElementById('file').files[0]);
-            reader.onload = e => {
-                const content = e.target.result;
-                fetch('/admin/posts', {
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+                const data = reader.result;
+                fetch('/admin/images', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        title: document.getElementById('title').value,
-                        content,
+                        filename: file.name,
+                        data,
                     }),
                 }).then(response => {
                     if (response.status === 201) {
-                        response.json().then(post => {
-                            window.location.href = `/posts/${post.slug}`;
-                        });
+                        window.location.href = '/admin/images';
                     }
                 });
             };

@@ -28,7 +28,7 @@ export default {
         res.sendStatus(200);
     }),
     addImagePage: expressAsync(async (req, res) => {
-        res.render('add-image', {
+        res.render('new-image', {
             user: req.user,
         });
     }),

@@ -1,14 +1,12 @@
 <nav>
     <a href="/">Home</a> |
     <% if (user) { %>
-    <% if (user.verified) { %>
-    <% if (user.roles.includes('admin')) { %>
-    <a href="/admin/add-post">Add Post</a> |
+    <% if (user.verified && user.roles.includes('admin')) { %>
+    <a href="/admin/new-post">New Post</a> |
     <a href="/admin/images">Images</a> |
-    <a href="/admin/add-image">Add Image</a> |
+    <a href="/admin/new-image">New Image</a> |
     <% } %>
     <a href="/change-password">Change Password</a> |
-    <% } %>
     <a href="javascript:logout();">Logout</a>
     <% } else { %>
     <a href="/register">Register</a> |

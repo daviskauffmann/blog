@@ -102,7 +102,6 @@ export default {
     }),
     changePassword: expressAsync(async (req, res) => {
         const user = req.user as User;
-
         const same = await user.comparePassword(req.body.currentPassword);
         if (!same) {
             res.sendStatus(401);
@@ -152,9 +151,7 @@ export default {
 
         const id = payload.sub as number;
         const [, [user]] = await User.update({
-            password: req.body.password,
-            // TODO: implicit verification?
-            // then, allow unverified users to change password
+            password: req.body.newPassword,
         }, { where: { id }, returning: true });
 
         const login = util.promisify(req.login.bind(req));

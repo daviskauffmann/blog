@@ -37,7 +37,7 @@ router.post('/resend-email-verification',
 router.get('/verify-email',
     authenticate,
     validate([
-        query('token').isString(),
+        query('token').isJWT(),
     ]),
     authController.verifyEmail);
 
@@ -58,20 +58,20 @@ router.get('/forgot-password',
 
 router.post('/send-password-reset-link',
     validate([
-        body('username').isString(),
+        body('email').isString(),
     ]),
     authController.sendPasswordResetLink);
 
 router.get('/reset-password',
     validate([
-        query('token').isString(),
+        query('token').isJWT(),
     ]),
     authController.resetPasswordPage);
 
 router.post('/reset-password',
     validate([
-        query('token').isString(),
-        body('password').isString(),
+        query('token').isJWT(),
+        body('newPassword').isString(),
     ]),
     authController.resetPassword);
 
@@ -84,7 +84,7 @@ router.get('/posts/:slug',
 router.get('/images/:filename',
     imageController.getImage);
 
-router.get('/admin/add-post',
+router.get('/admin/new-post',
     authenticate,
     authorize(['admin']),
     postController.addPostPage);
@@ -113,7 +113,7 @@ router.delete('/admin/images/:id',
     authorize(['admin']),
     imageController.deleteImage);
 
-router.get('/admin/add-image',
+router.get('/admin/new-image',
     authenticate,
     authorize(['admin']),
     imageController.addImagePage);
