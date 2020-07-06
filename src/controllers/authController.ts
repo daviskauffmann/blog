@@ -78,9 +78,14 @@ export default {
         res.sendStatus(200);
     }),
     verifyEmail: expressAsync(async (req, res) => {
+        if (!req.query.token) {
+            res.sendStatus(401);
+            return;
+        }
+
         let payload: any;
         try {
-            payload = jwt.verify(req.query.token, process.env.JWT_SECRET!);
+            payload = jwt.verify(req.query.token.toString(), process.env.JWT_SECRET!);
         } catch (err) {
             console.error(err);
             res.sendStatus(401);
@@ -121,7 +126,7 @@ export default {
     sendPasswordResetLink: expressAsync(async (req, res) => {
         const user = await User.findOne({ where: { email: req.body.email, verified: true } });
         if (!user) {
-            res.sendStatus(401);
+            res.sendStatus(401); // TODO: don't return error because this may open up a possible attack vector
             return;
         }
 
@@ -140,9 +145,14 @@ export default {
         res.render('reset-password');
     }),
     resetPassword: expressAsync(async (req, res) => {
+        if (!req.query.token) {
+            res.sendStatus(401);
+            return;
+        }
+
         let payload: any;
         try {
-            payload = jwt.verify(req.query.token, process.env.JWT_SECRET!);
+            payload = jwt.verify(req.query.token.toString(), process.env.JWT_SECRET!);
         } catch (err) {
             console.error(err);
             res.sendStatus(401);
