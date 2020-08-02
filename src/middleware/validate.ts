@@ -1,7 +1,7 @@
 import { ValidationChain, validationResult } from 'express-validator';
 import expressAsync from '../utils/expressAsync';
 
-function validate(validations: ValidationChain[]) {
+export default function (validations: ValidationChain[]) {
     return expressAsync(async (req, res) => {
         await Promise.all(validations.map(validation => validation.run(req)));
 
@@ -11,5 +11,3 @@ function validate(validations: ValidationChain[]) {
         }
     })
 };
-
-export default validate;
