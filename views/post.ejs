@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= post.title %> </title>
-    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
@@ -25,39 +25,17 @@
 
     <%- include('footer') %>
 
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script>
-        class Renderer extends marked.Renderer {
-            image(href, title, text) {
-                return super.image(`../images/${href}`, title, text);
-            }
-        }
-
-        const renderer = new Renderer();
-        document.getElementById('post').innerHTML = marked(`<%= post.content %>`, { renderer });
-
-        // <% if (user) { %>
-        // <% if (user.verified) { %>
-        document.getElementById('comment').onclick = e => {
-            console.log('TODO: comment');
-        };
-        // <% if (user.roles.includes('admin')) { %>
-        document.getElementById('edit').onclick = e => {
-            console.log('TODO: edit');
-        };
-        document.getElementById('delete').onclick = e => {
-            fetch('/admin/posts/<%= post.id %>', {
-                method: 'DELETE',
-            }).then(response => {
-                if (response.status === 200) {
-                    window.location.href = '/';
-                }
-            });
-        };
-        // <% } %>
-        // <% } %>
-        // <% } %>
-    </script>
+    <script src="/js/post/marked.js"></script>
+    <script src="/js/post/post.js" content="<%= post.content %>"></script>
+    <% if (user) { %>
+    <% if (user.verified) { %>
+    <script src="/js/post/comment.js"></script>
+    <% if (user.roles.includes('admin')) { %>
+    <script src="/js/post/edit.js"></script>
+    <script src="/js/post/delete.js"></script>
+    <% } %>
+    <% } %>
+    <% } %>
 </body>
 
 </html>

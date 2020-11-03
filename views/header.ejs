@@ -7,23 +7,15 @@
     <a href="/admin/new-image">New Image</a> |
     <% } %>
     <a href="/change-password">Change Password</a> |
-    <a href="javascript:logout();">Logout</a>
+    <a id="logout" href="/">Logout</a>
     <% } else { %>
     <a href="/register">Register</a> |
     <a id="login">Login</a>
     <% } %>
 </nav>
 
-<script>
-    // <% if (user) { %>
-    function logout() {
-        fetch('/logout', {
-            method: 'POST',
-        }).then(response => {
-            window.location.href = '/';
-        });
-    }
-    //<% } else { %>
-    document.getElementById('login').href = `/login?returnurl=${window.location.href}`;
-    // <% } %>
-</script>
+<% if (user) { %>
+    <script src="/js/header/logout.js"></script>
+<% } else { %>
+    <script src="/js/header/login.js"></script>
+<% } %>

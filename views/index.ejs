@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog</title>
-    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
@@ -15,7 +15,7 @@
     <h1>Welcome back, <%= user.username %>!</h1>
     <% if (!user.verified) { %>
     <p>Check your email for a verification link!</p>
-    <a href="javascript:resendEmailVerification()">Resend verification link</a>
+    <a id="resend-email-verification" href="/">Resend verification link</a>
     <% } %>
     <% } else { %>
     <h1>Welcome!</h1>
@@ -38,15 +38,9 @@
     <h2>No posts yet!</h2>
     <% } %>
 
-    <script>
-        // <% if (user && !user.verified) { %>
-        function resendEmailVerification() {
-            fetch('/resend-email-verification', {
-                method: 'POST',
-            });
-        }
-        // <% } %>
-    </script>
+    <% if (user && !user.verified) { %>
+    <script src="/js/home/resendEmailVerification.js"></script>
+    <% } %>
 </body>
 
 </html>

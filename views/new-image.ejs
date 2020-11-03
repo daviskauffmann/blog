@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>New Image</title>
-    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
@@ -14,34 +14,7 @@
     <input type="file" id="file" name="file">
     <button id="upload">Upload</button>
 
-    <script>
-        let file;
-        document.getElementById('file').onchange = e => {
-            file = e.target.files[0];
-        };
-
-        document.getElementById('upload').onclick = () => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => {
-                const data = reader.result;
-                fetch('/admin/images', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        filename: file.name,
-                        data,
-                    }),
-                }).then(response => {
-                    if (response.status === 201) {
-                        window.location.href = '/admin/images';
-                    }
-                });
-            };
-        };
-    </script>
+    <script src="/js/new-image/upload.js"></script>
 </body>
 
 </html>
