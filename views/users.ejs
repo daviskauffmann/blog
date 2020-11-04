@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <%- include('header') %>
+
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Verified</th>
+            <th>Roles</th>
+            <th>Registered</th>
+            <th>Controls</th>
+        </tr>
+        <% for(let i = 0; i < users.length; i++) { %>
+        <tr>
+            <td><%= users[i].id %></td>
+            <td><%= users[i].username %></td>
+            <td><%= users[i].email %></td>
+            <td><%= users[i].verified %></td>
+            <td><%= users[i].roles %></td>
+            <td><%= users[i].createdAt %></td>
+            <td>
+                <button id="edit-roles-<%= users[i].id %>">Edit Roles</button>
+                <button id="delete-<%= users[i].id %>">Delete</button>
+            </td>
+        </tr>
+        <% } %>
+    </table>
+
+    <script src="/js/users/users.js"
+        users="<%= JSON.stringify(users.map(user => ({ id: user.id, roles: user.roles }))) %>"></script>
+
+    <%- include('footer') %>
+</body>
+
+</html>

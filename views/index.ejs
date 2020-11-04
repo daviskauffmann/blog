@@ -38,6 +38,8 @@
     <h2>No posts yet!</h2>
     <% } %>
 
+    <%- include('footer') %>
+
     <% if (user && !user.verified) { %>
     <script src="/js/home/resendEmailVerification.js"></script>
     <% } %>

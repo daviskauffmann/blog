@@ -1,21 +1,24 @@
-<nav>
-    <a href="/">Home</a> |
-    <% if (user) { %>
-    <% if (user.verified && user.roles.includes('admin')) { %>
-    <a href="/admin/new-post">New Post</a> |
-    <a href="/admin/images">Images</a> |
-    <a href="/admin/new-image">New Image</a> |
-    <% } %>
-    <a href="/change-password">Change Password</a> |
-    <a id="logout" href="/">Logout</a>
-    <% } else { %>
-    <a href="/register">Register</a> |
-    <a id="login">Login</a>
-    <% } %>
-</nav>
+<header>
+    <nav>
+        <a href="/">Home</a> |
+        <% if (user) { %>
+        <% if (user.roles.includes('admin')) { %>
+        <a href="/admin/users">Users</a> |
+        <a href="/admin/new-post">New Post</a> |
+        <a href="/admin/images">Images</a> |
+        <a href="/admin/new-image">New Image</a> |
+        <% } %>
+        <a href="/change-password">Change Password</a> |
+        <a id="logout" href="/">Logout</a>
+        <% } else { %>
+        <a href="/register">Register</a> |
+        <a id="login">Login</a>
+        <% } %>
+    </nav>
+</header>
 
 <% if (user) { %>
-    <script src="/js/header/logout.js"></script>
+<script src="/js/header/logout.js"></script>
 <% } else { %>
-    <script src="/js/header/login.js"></script>
+<script src="/js/header/login.js"></script>
 <% } %>

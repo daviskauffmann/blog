@@ -4,6 +4,6 @@ class Renderer extends marked.Renderer {
     }
 }
 
-const renderer = new Renderer();
 const content = document.currentScript.getAttribute('content');
+const renderer = new Renderer();
 document.getElementById('post').innerHTML = marked(content, { renderer });

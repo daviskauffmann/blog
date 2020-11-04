@@ -56,7 +56,9 @@ router.post('/register',
             password: req.body.password,
             email: req.body.email,
             verified: false,
-            roles: req.body.username === 'admin' ? ['admin'] : [],
+            roles: req.body.username === 'admin'
+                ? ['admin', 'moderator']
+                : [],
         });
 
         const token = jwt.sign({ sub: user.id }, process.env.JWT_SECRET!, { expiresIn: '24h' });
@@ -274,6 +276,41 @@ router.get('/images/:filename',
         res.status(200).send(data);
     }));
 
+router.get('/admin/users',
+    authenticate,
+    authorize(['admin']),
+    expressAsync(async (req, res) => {
+        const users = await User.findAll();
+
+        res.render('users', {
+            user: req.user,
+            users,
+        });
+    }));
+
+router.put('/admin/users/:id',
+    authenticate,
+    authorize(['admin']),
+    validate([
+        body('roles').isArray(),
+    ]),
+    expressAsync(async (req, res) => {
+        const [, [user]] = await User.update({
+            roles: req.body.roles,
+        }, { where: { id: req.params.id }, returning: true });
+
+        res.status(200).send(user);
+    }));
+
+router.delete('/admin/users/:id',
+    authenticate,
+    authorize(['admin']),
+    expressAsync(async (req, res) => {
+        await User.destroy({ where: { id: req.params.id } });
+
+        res.sendStatus(200);
+    }));
+
 router.get('/admin/new-post',
     authenticate,
     authorize(['admin']),
@@ -307,7 +344,7 @@ router.post('/admin/posts',
 
 router.delete('/admin/posts/:id',
     authenticate,
-    authorize(['admin']),
+    authorize(['moderator']),
     expressAsync(async (req, res) => {
         await Post.destroy({ where: { id: req.params.id } });
 

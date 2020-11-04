@@ -6,8 +6,10 @@ passport.use(new LocalStrategy(async (username, password, done) => {
     try {
         const user = await User.findOne({ where: { username } });
         if (!user) return done(null, false);
+
         const same = await user.comparePassword(password);
         if (!same) return done(null, false);
+
         done(null, user);
     } catch (err) {
         done(err);

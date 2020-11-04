@@ -13,10 +13,12 @@
 
     <% for(let i = 0; i < images.length; i++) { %>
     <img src="/images/<%= images[i].filename %>">
-    <button id="<%= images[i].id %>">Delete</button>
+    <button id="delete-<%= images[i].id %>">Delete</button>
     <% } %>
 
-    <script src="/js/images/images.js" images="<%= images %>"></script>
+    <%- include('footer') %>
+
+    <script src="/js/images/images.js" images="<%= JSON.stringify(images.map(image => ({ id: image.id }))) %>"></script>
 </body>
 
 </html>
