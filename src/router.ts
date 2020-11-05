@@ -2,6 +2,7 @@ import express from 'express';
 import { body, query } from 'express-validator';
 import jwt from 'jsonwebtoken';
 import passport from 'passport';
+import path from 'path';
 import { Op } from 'sequelize';
 import util from 'util';
 import mail from './mail';
@@ -103,6 +104,7 @@ router.post('/resend-email-verification',
     authenticate,
     expressAsync(async (req, res) => {
         const user = req.user as User;
+
         const token = jwt.sign({ sub: user.id }, process.env.JWT_SECRET!, { expiresIn: '24h' });
         await mail.sendMail({
             from: process.env.SMTP_USERNAME,
@@ -159,6 +161,7 @@ router.post('/change-password',
     ]),
     expressAsync(async (req, res) => {
         const user = req.user as User;
+
         const same = await user.comparePassword(req.body.currentPassword);
         if (!same) {
             res.sendStatus(401);
@@ -270,8 +273,9 @@ router.get('/images/:filename',
             return;
         }
 
-        const data = Buffer.from(image.data.replace(/^data:image\/png;base64,/, ''), 'base64');
-        res.contentType('png');
+        const data = Buffer.from(image.data.replace(/^data:image\/(png|jpeg|jpg);base64,/, ''), 'base64');
+
+        res.contentType(path.extname(image.filename));
         res.header('Content-Length', data.length.toString());
         res.status(200).send(data);
     }));
