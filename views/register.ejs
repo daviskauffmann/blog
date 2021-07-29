@@ -1,24 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
-    <link rel="stylesheet" href="/css/style.css">
-</head>
+<%- include('head') %>
 
 <body>
-    <label for="username">Username:</label>
+    <label for="username">username:</label>
     <input type="text" id="username" name="username" value="admin"><br><br>
-    <label for="email">Email:</label>
+    <label for="email">email:</label>
     <input type="text" id="email" name="email" value="admin@admin.com"><br><br>
-    <label for="password">Password:</label>
+    <label for="password">password:</label>
     <input type="password" id="password" name="password" value="admin"><br><br>
-    <label for="confirm-password">Confirm Password:</label>
+    <label for="confirm-password">confirm password:</label>
     <input type="password" id="confirm-password" name="confirm-password" value="admin"><br><br>
-    <button id="register">Register</button>
-    <a href="/">Back</a>
+    <button id="register">register</button>
+    <a href="/">back</a>
 
     <%- include('footer') %>
 

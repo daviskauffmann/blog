@@ -38,7 +38,7 @@ User.init({
         allowNull: false,
         validate: {
             isEmail: true,
-        }
+        },
     },
     verified: {
         type: BOOLEAN,

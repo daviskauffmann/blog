@@ -1,22 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link rel="stylesheet" href="/css/style.css">
-</head>
+<%- include('head') %>
 
 <body>
-    <label for="username">Username:</label>
+    <label for="username">username:</label>
     <input type="text" id="username" name="username" value="admin"><br><br>
-    <label for="password">Password:</label>
+    <label for="password">password:</label>
     <input type="password" id="password" name="password" value="admin"><br><br>
-    <button id="login">Login</button>
-    <a href="/">Back</a>
+    <button id="login">login</button>
+    <a href="/">back</a>
     <br>
-    <a href="/forgot-password">Forgot Password</a>
+    <a href="/forgot-password">forgot password</a>
 
     <%- include('footer') %>
 

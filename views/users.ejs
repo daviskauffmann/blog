@@ -1,25 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Users</title>
-    <link rel="stylesheet" href="/css/style.css">
-</head>
+<%- include('head') %>
 
 <body>
     <%- include('header') %>
 
     <table>
         <tr>
-            <th>ID</th>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Verified</th>
-            <th>Roles</th>
-            <th>Registered</th>
-            <th>Controls</th>
+            <th>id</th>
+            <th>username</th>
+            <th>email</th>
+            <th>verified</th>
+            <th>roles</th>
+            <th>registered</th>
+            <th>controls</th>
         </tr>
         <% for(let i = 0; i < users.length; i++) { %>
         <tr>
@@ -30,8 +25,8 @@
             <td><%= users[i].roles %></td>
             <td><%= users[i].createdAt %></td>
             <td>
-                <button id="edit-roles-<%= users[i].id %>">Edit Roles</button>
-                <button id="delete-<%= users[i].id %>">Delete</button>
+                <button id="edit-roles-<%= users[i].id %>">edit roles</button>
+                <button id="delete-<%= users[i].id %>">delete</button>
             </td>
         </tr>
         <% } %>

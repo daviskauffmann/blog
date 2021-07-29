@@ -1,20 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New Post</title>
-    <link rel="stylesheet" href="/css/style.css">
-</head>
+<%- include('head') %>
 
 <body>
     <%- include('header') %>
 
-    <label for="title">Title:</label>
+    <label for="title">title:</label>
     <input type="text" id="title" name="title" value=""><br><br>
     <input type="file" id="file" name="file">
-    <button id="post">Post</button>
+    <button id="post">post!</button>
 
     <%- include('footer') %>
 

@@ -1,19 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Images</title>
-    <link rel="stylesheet" href="/css/style.css">
-</head>
+<%- include('head') %>
 
 <body>
     <%- include('header') %>
 
     <% for(let i = 0; i < images.length; i++) { %>
     <img src="/images/<%= images[i].filename %>">
-    <button id="delete-<%= images[i].id %>">Delete</button>
+    <button id="delete-<%= images[i].id %>">delete</button>
     <% } %>
 
     <%- include('footer') %>

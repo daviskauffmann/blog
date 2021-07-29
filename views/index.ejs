@@ -1,24 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog</title>
-    <link rel="stylesheet" href="/css/style.css">
-</head>
+<%- include('head') %>
 
 <body>
     <%- include('header') %>
 
     <% if (user) { %>
-    <h1>Welcome back, <%= user.username %>!</h1>
+    <h1>welcome back, <%= user.username %>!</h1>
     <% if (!user.verified) { %>
-    <p>Check your email for a verification link!</p>
-    <a id="resend-email-verification" href="/">Resend verification link</a>
+    <p>check your email for a verification link!</p>
+    <a id="resend-email-verification" href="/">resend verification link</a>
     <% } %>
     <% } else { %>
-    <h1>Welcome!</h1>
+    <h1>welcome!</h1>
     <% } %>
 
     <% if (message) { %>
@@ -26,7 +21,7 @@
     <% } %>
 
     <% if (posts.length) { %>
-    <h2>Posts</h2>
+    <h2>posts</h2>
     <ul>
         <% for(let i = 0; i < posts.length; i++) { %>
         <li>
@@ -35,7 +30,7 @@
         <% } %>
     </ul>
     <% } else { %>
-    <h2>No posts yet!</h2>
+    <h2>no posts yet!</h2>
     <% } %>
 
     <%- include('footer') %>
