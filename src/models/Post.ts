@@ -1,4 +1,4 @@
-import { INTEGER, Model, STRING, TEXT } from 'sequelize';
+import { INTEGER, Model, STRING, TEXT, TIME } from 'sequelize';
 import slugify from 'slugify';
 import sequelize from '../sequelize';
 
@@ -31,7 +31,18 @@ Post.init({
         type: TEXT,
         allowNull: false,
     },
+    createdAt: {
+        type: TIME,
+        field: 'created_at',
+    },
+    updatedAt: {
+        type: TIME,
+        field: 'updated_at',
+    },
 }, {
+    createdAt: 'created_at',
+    updatedAt: 'updated_at',
+    tableName: 'post',
     sequelize,
 });
 

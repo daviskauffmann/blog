@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import { Model, STRING, ARRAY, INTEGER, BOOLEAN } from 'sequelize';
+import { ARRAY, BOOLEAN, INTEGER, Model, STRING, TIME } from 'sequelize';
 import sequelize from '../sequelize';
 
 export default class User extends Model {
@@ -17,7 +17,7 @@ export default class User extends Model {
     }
 }
 
-User.init({
+User.init<User>({
     id: {
         type: INTEGER,
         primaryKey: true,
@@ -48,7 +48,18 @@ User.init({
         type: ARRAY(STRING),
         allowNull: false,
     },
+    createdAt: {
+        type: TIME,
+        field: 'created_at',
+    },
+    updatedAt: {
+        type: TIME,
+        field: 'updated_at',
+    },
 }, {
+    createdAt: 'created_at',
+    updatedAt: 'updated_at',
+    tableName: 'user',
     sequelize,
 });
 

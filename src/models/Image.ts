@@ -1,4 +1,4 @@
-import { INTEGER, Model, STRING, TEXT } from 'sequelize';
+import { INTEGER, Model, STRING, TEXT, TIME } from 'sequelize';
 import sequelize from '../sequelize';
 
 export default class Image extends Model {
@@ -24,6 +24,17 @@ Image.init({
         type: TEXT,
         allowNull: false,
     },
+    createdAt: {
+        type: TIME,
+        field: 'created_at',
+    },
+    updatedAt: {
+        type: TIME,
+        field: 'updated_at',
+    },
 }, {
+    createdAt: 'created_at',
+    updatedAt: 'updated_at',
+    tableName: 'image',
     sequelize,
 });

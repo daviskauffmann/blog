@@ -10,16 +10,16 @@
 
     <% if (user) { %>
     <% if (user.verified) { %>
-    <button id="comment">Comment</button>
+    <button id="comment">comment</button>
     <% } else { %>
     <button disabled>Comment</button>
-    <p>Verify your email to comment!</p>
+    <p>verify your email to comment!</p>
     <% } %>
     <% if (user.roles.includes('admin')) { %>
-    <button id="edit">Edit</button>
+    <button id="edit">edit</button>
     <% } %>
     <% if (user.roles.includes('admin') || user.roles.includes('moderator')) { %>
-    <button id="delete">Delete</button>
+    <button id="delete">delete</button>
     <% } %>
     <% } %>
 
