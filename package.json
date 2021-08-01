@@ -6,9 +6,9 @@
   "scripts": {
     "build": "tsc",
     "clean": "rm -rf dist",
-    "debug": "nodemon dist",
+    "debug": "nodemon --delay 1 -r dotenv/config -r source-map-support/register dist",
     "lint": "eslint src/**/*.ts",
-    "start": "node dist",
+    "start": "node -r dotenv/config -r source-map-support/register dist",
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "tsc -w"
   },
