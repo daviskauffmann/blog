@@ -1,20 +1,23 @@
 {
     "compilerOptions": {
-        "sourceMap": true,
+        // Type Checking
+        "strict": true,
+        // Modules
+        "module": "commonjs",
+        "rootDir": "src",
+        // Emit
         "declaration": true,
         "declarationMap": true,
-        "rootDir": "./src",
-        "outDir": "./dist",
-        "strict": true,
+        "outDir": "dist",
+        "sourceMap": true,
+        // Interop Constraints
         "esModuleInterop": true,
-        "target": "es2016",
-        "module": "commonjs",
-        "lib": [
-            "es2016",
-        ],
+        // Language and Environment
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "target": "ES6"
     },
-    "exclude": [
-        "node_modules",
-        "dist"
+    "include": [
+        "src"
     ]
 }

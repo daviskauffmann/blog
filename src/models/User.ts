@@ -17,7 +17,7 @@ export default class User extends Model {
     }
 }
 
-User.init<User>({
+User.init({
     id: {
         type: INTEGER,
         primaryKey: true,
