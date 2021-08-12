@@ -21,7 +21,7 @@ npm run build
 To watch for changes to source files:
 
 ```sh
-npm run watch
+npm run build:watch
 ```
 
 ### Run
@@ -33,7 +33,7 @@ npm start
 To watch for changes to built files:
 
 ```sh
-npm run debug
+npm run start:watch
 ```
 
 ### Test
