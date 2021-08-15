@@ -13,8 +13,6 @@
         // Interop Constraints
         "esModuleInterop": true,
         // Language and Environment
-        "emitDecoratorMetadata": true,
-        "experimentalDecorators": true,
         "target": "ES6"
     },
     "include": [
