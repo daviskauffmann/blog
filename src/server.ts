@@ -6,14 +6,16 @@ sequelize.authenticate()
     .then(() => console.log(`Connected to database: ${process.env.DATABASE_URI}`))
     .then(() => sequelize.sync())
     .then(async () => sequelize.query(`
-        INSERT INTO "user" ("id", "username", "password", "email", "verified", "roles")
+        INSERT INTO "user" ("id", "username", "password", "email", "verified", "roles", "created_at", "updated_at")
         SELECT
             1 AS "id",
             'admin' AS "username",
             '${await bcrypt.hash('admin', 12)}' AS "password",
             'admin@admin.com' AS "email",
             true as "verified",
-            ARRAY['admin'] AS "roles"
+            ARRAY['admin'] AS "roles",
+            '${new Date().toISOString()}' as "created_at",
+            '${new Date().toISOString()}' as "updated_at"
         WHERE NOT EXISTS (
             SELECT "id"
             FROM "user"

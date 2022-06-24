@@ -246,7 +246,7 @@ router.post('/reset-password',
 
 router.post('/logout',
     expressAsync(async (req, res) => {
-        req.logout();
+        // req.logout();
 
         res.sendStatus(200);
     }));
